@@ -19,11 +19,12 @@ export default function BeefreeEditor() {
       };
 
       // Get a token from your backend
-      const token = await fetch('http://localhost:3001/proxy/bee-auth', {
+      const response = await fetch('http://localhost:3001/proxy/bee-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid: 'demo-user' })
-      }).then(res => res.json());
+      })
+      const token = await response.json();
 
       // Initialize the editor
       const bee = new BeefreeSDK(token);
