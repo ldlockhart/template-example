@@ -249,7 +249,7 @@ app.listen(PORT, () => {
 });
 ```
 
-Create a .env file and copy and paste your credentials from the Beefree SDK Developer Console securely into the file.
+The `.env.example` file in the root of the GitHub repository includes an example of a `.env` file. To create a .env file, rename this file to `.env`. Copy and paste your credentials from the Beefree SDK Developer Console securely into the file's placeholders. The following code shows an example of what these placeholders look like inside the file.
 
 ```javascript
 BEE_CLIENT_ID='YOUR-CLIENT-ID'
