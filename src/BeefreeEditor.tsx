@@ -28,7 +28,9 @@ export default function BeefreeEditor() {
 
       // Initialize the editor
       const bee = new BeefreeSDK(token);
-      bee.start(beeConfig, {});
+      bee.start(beeConfig, {
+        type: 'page',
+      });
     }
 
     initializeEditor();
