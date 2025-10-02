@@ -6,10 +6,56 @@ import BeefreeEditor from './BeefreeEditor';
 // In a real application, this data would come from your database via an API call.
 // These are placeholder objects. You would replace them with actual Beefree JSON templates.
 const MOCK_TEMPLATE_1 = {
-  "page": { "description": "My Template 1", "rows": [] }
+  "page": {
+    "description": "My First Template",
+    "rows": [
+      {
+        "columns": [
+          {
+            "grid-columns": 12,
+            "modules": [
+              {
+                "type": "mailup-bee-newsletter-modules-text",
+                "descriptor": {
+                  "text": {
+                    "html": "<p>This is Template 1.</p>",
+                    "style": { "color": "#000000" }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 };
+
+// A second valid template to test switching.
 const MOCK_TEMPLATE_2 = {
-  "page": { "description": "My Template 2 - A different design", "rows": [] }
+  "page": {
+    "description": "My Second Template",
+    "rows": [
+       {
+        "columns": [
+          {
+            "grid-columns": 12,
+            "modules": [
+              {
+                "type": "mailup-bee-newsletter-modules-text",
+                "descriptor": {
+                  "text": {
+                    "html": "<p>This is the awesome second template!</p>",
+                    "style": { "color": "#3f51b5" }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 };
 // -----------------
 

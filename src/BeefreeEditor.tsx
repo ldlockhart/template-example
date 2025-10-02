@@ -8,65 +8,63 @@ interface BeefreeEditorProps {
 }
 
 export default function BeefreeEditor(props: BeefreeEditorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  // Use a ref to hold the beeInstance. This prevents re-renders when it's set.
+  const beeInstanceRef = useRef<any>(null);
 
-  // Use state to hold the beeInstance once it's created
-  const [beeInstance, setBeeInstance] = useState<any>(null);
-
-  // This useEffect runs only ONCE on initial mount to create the editor
+  // A single, powerful useEffect to manage the editor's lifecycle
   useEffect(() => {
-    async function initializeEditor() {
-      // Get a token from your backend
-      const response = await fetch('http://localhost:3001/proxy/bee-auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: 'demo-user' })
-      });
-      const token = await response.json();
+    async function setupEditor() {
+      // If no template is passed yet, do nothing.
+      if (!props.template) {
+        return;
+      }
 
-      const bee = new BeefreeSDK(token);
+      // Check if the editor has already been created
+      if (beeInstanceRef.current) {
+        // If it exists, just load the new template
+        beeInstanceRef.current.load(props.template);
+      } else {
+        // If it doesn't exist, this is the first run. Let's create it.
+        const response = await fetch('http://localhost:3001/proxy/bee-auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: 'demo-user' })
+        });
+        const token = await response.json();
 
-      // The beeConfig now uses the onSave prop passed down from the parent
-      const beeConfig = {
-        container: 'beefree-react-demo',
-        language: 'en-US',
-        onSave: (pageJson: string) => {
-          // When the editor saves, call the parent's onSave function
-          props.onSave(JSON.parse(pageJson));
-        },
-        onError: (error: unknown) => {
-          console.error('Error:', error);
-        }
-      };
+        const beeConfig = {
+          container: 'beefree-react-demo',
+          language: 'en-US',
+          onSave: (pageJson: string) => {
+            props.onSave(JSON.parse(pageJson));
+          },
+          onError: (error: unknown) => {
+            console.error('Beefree Error:', error);
+          }
+        };
 
-      // Use `create` to get the instance, then `start`
-      bee.create(beeConfig, (instance) => {
-        // Save the instance to our state so we can use it later
-        setBeeInstance(instance);
+        // Initialize the instance with `new`
+        const bee = new BeefreeSDK(token);
 
-        // Start the editor with the initial template from props
-        instance.start(props.template);
-      });
+        // Save the instance to our ref for future use
+        beeInstanceRef.current = bee;
+
+        // Start the editor with the initial template
+        bee.start(beeConfig, props.template);
+      }
     }
 
-    initializeEditor();
-  }, []); // The empty dependency array ensures this runs only once
+    setupEditor();
 
-  // This NEW useEffect hook runs whenever the `template` prop changes
-  useEffect(() => {
-    // If the instance exists and a new template has been passed down, load it
-    if (beeInstance && props.template) {
-      beeInstance.load(props.template);
-    }
-  }, [props.template]); // The dependency array ensures this runs whenever props.template changes!
+  }, [props.template]); // Dependency: This hook runs whenever props.template changes!
 
 
   return (
+    // The container div for the editor
     <div
       id="beefree-react-demo"
-      ref={containerRef}
       style={{
-        height: '80vh', // Adjusted for better viewing
+        height: '80vh',
         border: '1px solid #ddd',
         borderRadius: '8px'
       }}
