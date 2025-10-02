@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import BeefreeSDK from '@beefree.io/sdk';
 
-// Define the types for the props our component will accept
 interface BeefreeEditorProps {
   template: object; // The full JSON object of the template
   onSave: (jsonFile: object) => void;
 }
 
 export default function BeefreeEditor(props: BeefreeEditorProps) {
-  // Use a ref to hold the beeInstance. This prevents re-renders when it's set.
   const beeInstanceRef = useRef<any>(null);
 
-  // A single, powerful useEffect to manage the editor's lifecycle
   useEffect(() => {
     async function setupEditor() {
       // If no template is passed yet, do nothing.

@@ -3,8 +3,8 @@ import './App.css';
 import BeefreeEditor from './BeefreeEditor';
 
 // --- MOCK DATA ---
-// In a real application, this data would come from your database via an API call.
-// These are placeholder objects. You would replace them with actual Beefree JSON templates.
+// In a real application, this data would come from the database via an API call.
+// These are placeholder JSON objects only
 const MOCK_TEMPLATE_1 = {
   "page": {
     "description": "My First Template",
@@ -31,7 +31,6 @@ const MOCK_TEMPLATE_1 = {
   }
 };
 
-// A second valid template to test switching.
 const MOCK_TEMPLATE_2 = {
   "page": {
     "description": "My Second Template",
@@ -57,7 +56,6 @@ const MOCK_TEMPLATE_2 = {
     ]
   }
 };
-// -----------------
 
 function DocsButton() {
   return (
@@ -74,17 +72,12 @@ function DocsButton() {
 }
 
 function App() {
-  // 1. Use state to hold the current template's JSON object
-  const [template, setTemplate] = useState<object | null>(null);
 
-  // 2. This useEffect fetches the initial template when the component mounts
+  const [template, setTemplate] = useState<object | null>(null);s
   useEffect(() => {
     console.log("Fetching initial template from our backend...");
-    // In a real app, this would be an API call: `fetch('/api/templates/1').then(...)`
     setTemplate(MOCK_TEMPLATE_1);
-  }, []); // The empty array ensures this runs only once
-
-  // 3. This function will be passed to the editor to handle the save event
+  }, []);
   const handleSave = (templateJson: object) => {
     console.log("Template saved! Sending updated JSON to our backend...");
     console.log(templateJson);
@@ -104,7 +97,6 @@ function App() {
         </div>
       </header>
       <main>
-        {/* 4. We conditionally render the editor only when the template data is ready */}
         {template ? (
           <BeefreeEditor template={template} onSave={handleSave} />
         ) : (
